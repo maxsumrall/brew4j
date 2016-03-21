@@ -5,6 +5,10 @@ import random
 
 def main():
     graph = Graph()
+    graph.cypher.execute("CREATE CONSTRAINT ON (user:User) ASSERT user.username IS UNIQUE" )
+    graph.cypher.execute("CREATE CONSTRAINT ON (job:Job) ASSERT job.title IS UNIQUE" )
+    graph.cypher.execute("CREATE CONSTRAINT ON (city:City) ASSERT city.name IS UNIQUE" )
+
 
     userFile = open("users.csv", "r")
     userFile.readline()

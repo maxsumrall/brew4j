@@ -5,6 +5,6 @@ A microblog application written in Python powered by Flask and Neo4j. Extension 
 
 Make sure [Neo4j](http://neo4j.com/download/other-releases/) is running first!
 
-Uses Python 3.5
+Uses Python 3.5 and Neo4j 2.3.2
 
 [http://localhost:5000](http://localhost:5000)
