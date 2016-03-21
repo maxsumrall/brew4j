@@ -1,14 +1,16 @@
-from models import User, get_todays_recent_posts
+from .models import User, get_todays_recent_reviews
 from flask import Flask, request, session, redirect, url_for, render_template, flash
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def index():
-    posts = get_todays_recent_posts()
-    return render_template('index.html', posts=posts)
+    reviews = get_todays_recent_reviews()
+    return render_template('index.html', reviews=reviews)
 
-@app.route('/register', methods=['GET','POST'])
+
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
@@ -27,6 +29,7 @@ def register():
 
     return render_template('register.html')
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -42,42 +45,44 @@ def login():
 
     return render_template('login.html')
 
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
     flash('Logged out.')
     return redirect(url_for('index'))
 
-@app.route('/add_post', methods=['POST'])
-def add_post():
-    title = request.form['title']
-    tags = request.form['tags']
-    text = request.form['text']
 
-    if not title or not tags or not text:
-        if not title:
-            flash('You must give your post a title.')
-        if not tags:
-            flash('You must give your post at least one tag.')
+@app.route('/add_review', methods=['POST'])
+def add_review():
+    title = request.form['title']
+    text = request.form['text']
+    beerId = request.form['beerId']
+
+    if not text or not beerId:
         if not text:
-            flash('You must give your post a text body.')
+            flash('You must give your review a text body.')
+        if not beerId:
+            flash('You must specify a beer to review')
     else:
-        User(session['username']).add_post(title, tags, text)
+        User(session['username']).add_review(text, beerId)
 
     return redirect(url_for('index'))
 
-@app.route('/like_post/<post_id>')
-def like_post(post_id):
+
+@app.route('/like_beer/<beer_id>')
+def like_beer(beer_id):
     username = session.get('username')
 
     if not username:
-        flash('You must be logged in to like a post.')
+        flash('You must be logged in to like a beer.')
         return redirect(url_for('login'))
 
-    User(username).like_post(post_id)
+    User(username).like_beer(beer_id)
 
-    flash('Liked post.')
+    flash('Liked beer.')
     return redirect(request.referrer)
+
 
 @app.route('/profile/<username>')
 def profile(username):
@@ -85,7 +90,7 @@ def profile(username):
     user_being_viewed_username = username
 
     user_being_viewed = User(user_being_viewed_username)
-    posts = user_being_viewed.get_recent_posts()
+    reviews = user_being_viewed.get_recent_reviews()
 
     similar = []
     common = []
@@ -101,7 +106,7 @@ def profile(username):
     return render_template(
         'profile.html',
         username=username,
-        posts=posts,
+        reviews=reviews,
         similar=similar,
         common=common
     )

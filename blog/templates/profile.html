@@ -10,29 +10,29 @@
           {% for user in similar %}
             <p>
             <a href="{{ url_for('profile', username=user.similar_user) }}">{{ user.similar_user }}</a>
-            also blogs about <i>{{ ", ".join(user.tags) }}</i>
+            also drinks <i>{{ ", ".join(user.likes) }}</i>
             </p>
           {% else %}
-            <p>There aren't any users who've blogged about the same tags as you!</p>
+            <p>There aren't any users who enjoyed the same beers as you.</p>
           {% endfor %}
 
-        <h3>Your recent posts:</h3>
+        <h3>Your recent reviews:</h3>
 
     {% else %}
 
   <p>{{ username }} has liked {{ common.likes }} of your posts and
       {% if common.tags %}
-      also blogs about <i>{{ ", ".join(common.tags) }}</i>
+      also drinks about <i>{{ ", ".join(common.reviews) }}</i>
       {% else %}
       hasn't blogged about any of the same tags
       {% endif %}
   </p>
 
-  <h3>{{ username }}'s recent posts:</h3>
+  <h3>{{ username }}'s recent reviews:</h3>
 
     {% endif %}
 {% endif %}
 
-{% include "display_posts.html" %}
+{% include "display_reviews.html" %}
 
 {% endblock %}

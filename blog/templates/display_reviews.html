@@ -1,0 +1,14 @@
+  <ul class="reviews">
+  {% for row in reviews %}
+    <li>
+    	<b>{{ row.beer.name}}</b>
+    	<p>{{ row.review.text }}</p>
+        {% if request.path == "/" %}
+    	by <a href="{{ url_for('profile', username=row.username) }}">{{ row.username }}</a>
+        {% endif %}
+    	on {{ row.review.date }}
+    	<a href="{{ url_for('like_beer', beer_id=row.beer.name) }}">like</a><br>
+  {% else %}
+    <li>There aren't any reviews yet!
+  {% endfor %}
+  </ul>
