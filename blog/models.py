@@ -13,6 +13,33 @@ def all_styles():
     """
     return graph.cypher.execute(query)
 
+def all_breweries():
+    query = """
+    MATCH (brewery:Brewery)
+    RETURN brewery
+    ORDER BY brewery.name
+    """
+    return graph.cypher.execute(query)
+
+def beers_by_brewery_for_brewery_db_id(brewery_db_id):
+    query = """
+    MATCH (beer:Beer)-[:PRODUCED_BY]->(brewery:Brewery)
+    WHERE brewery.breweryDbId = {brewery_db_id}
+    RETURN beer
+    """
+    return graph.cypher.execute(query, brewery_db_id=brewery_db_id)
+
+def beer_for_brewery_db_id(brewery_db_id):
+    query = """
+    MATCH (beer:Beer)
+    WHERE beer.breweryDbId = {brewery_db_id}
+    OPTIONAL MATCH (beer:Beer)-[:PRODUCED_BY]->(brewery:Brewery)
+    OPTIONAL MATCH (beer:Beer)-[:IS_STYLE]->(style:Style)
+    OPTIONAL MATCH (beer:Beer)-[:HAS_ABV]->(abv:Abv)
+    OPTIONAL MATCH (beer:Beer)-[:HAS_IBU]->(ibu:Ibu)
+    RETURN beer, brewery, style, abv, ibu
+    """
+    return graph.cypher.execute(query, brewery_db_id=brewery_db_id)
 
 class User:
     def __init__(self, username):

@@ -1,4 +1,4 @@
-from .models import User, get_todays_recent_reviews, all_styles
+from .models import User, get_todays_recent_reviews, all_styles, all_breweries, beers_by_brewery_for_brewery_db_id, beer_for_brewery_db_id
 from flask import Flask, request, session, redirect, url_for, render_template, flash, make_response
 from avatar_generator import Avatar
 
@@ -111,6 +111,36 @@ def styles():
         styles=styles,
     )
 
+@app.route('/breweries')
+def breweries():
+    breweries = all_breweries()
+
+    return render_template(
+        'breweries.html',
+        breweries=breweries,
+    )
+
+@app.route('/beers_for_brewery/<brewery_db_id>')
+def beers_for_brewery(brewery_db_id):
+    beers = beers_by_brewery_for_brewery_db_id(brewery_db_id)
+
+    return render_template(
+        'beer.html',
+        beers=beers,
+    )
+
+@app.route('/beer_details/<brewery_db_id>')
+def beer_details(brewery_db_id):
+    beer, brewery, style, abv, ibu = beer_for_brewery_db_id(brewery_db_id)[0]
+
+    return render_template(
+        'beer_details.html',
+        beer=beer,
+        brewery=brewery,
+        style=style,
+        abv=abv,
+        ibu=ibu,
+    )
 
 @app.route('/profile/<username>')
 def profile(username):

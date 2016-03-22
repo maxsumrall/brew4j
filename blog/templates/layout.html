@@ -1,33 +1,29 @@
 <!doctype html>
 <title>ABeerFor.Me</title>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-<div class="sidebar">
-  <img src="{{ url_for('static', filename='logo.png') }}" />
-  <ul>
+<div class="sidebar" style="float: left">
+  <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='logo.png') }}" /></a>
+
+  <ul style="list-style:none;">
+  {% if session.username %}
+    <li>Logged in as {{ session.username }}</li>
+  {% endif %}
+  {% if not session.username %}
+    <li><a href="{{ url_for('login') }}">Login</a></li>
+  {% else %}
+    <li><a href="{{ url_for('profile', username=session.username) }}">Profile</a></li>
+    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+  {% endif %}
     <li><a href="{{ url_for('styles') }}">Styles</a></li>
     <li>Strengths</li>
-    <li>Breweries</li>
-    {% if session.username %}
+    <li><a href="{{ url_for('breweries') }}">Breweries</a></li>
+  {% if session.username %}
     <li><a href="{{ url_for('friends', username=session.username) }}">Friends</a></li>
-    {% endif %}
+  {% endif %}
     <li>Recommendations</li>
   </ul>
 </div>
-<div class="page">
-  <h1>My Blogging Site</h1>
-  <div class="metanav">
-  {% if session.username %}
-  Logged in as {{ session.username }}
-  {% endif %}
-  <a href="{{ url_for('index') }}">Home</a>
-  {% if not session.username %}
-    <a href="{{ url_for('register') }}">Register</a>
-    <a href="{{ url_for('login') }}">Login</a>
-  {% else %}
-    <a href="{{ url_for('profile', username=session.username) }}">Profile</a>
-    <a href="{{ url_for('logout') }}">Logout</a>
-  {% endif %}
-  </div>
+<div class="content">
   {% for message in get_flashed_messages() %}
     <div class="flash">{{ message }}</div>
   {% endfor %}

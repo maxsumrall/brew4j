@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<h1>Breweries</h1>
+
+<ul style="list-style: none;">
+{% for brewery in breweries %}
+  <li>
+    <div>
+      <strong><a href="{{ url_for('beers_for_brewery', brewery_db_id=brewery.brewery.breweryDbId) }}">{{ brewery.brewery.name }}</a></strong>
+    </div>
+  </li>
+{% endfor %}
+</ul>
+
+{% endblock %}

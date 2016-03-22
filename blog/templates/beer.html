@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<table>
+  <tr>
+    <th></th>
+    <th>Name</th>
+    <th>Description</th>
+  </tr>
+{% for beer in beers %}
+  <tr>
+    <td>
+    {% if beer.beer.icon %}
+      <img src="{{ beer.beer.icon }}" height="48" />
+    {% else %}
+      <img src="{{ url_for('static', filename='default_beer.jpg') }}" height="48" />
+    {% endif %}
+    </td>
+    <td>
+      <strong><a href="{{ url_for('beer_details', brewery_db_id=beer.beer.breweryDbId) }}">{{ beer.beer.name }}</a></strong>
+    </td>
+    <td>
+      <p>{{ beer.beer.description }}</p>
+    </td>
+  </tr>
+{% endfor %}
+</table>
+
+{% endblock %}

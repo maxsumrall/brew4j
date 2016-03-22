@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<h1>{{ beer.name }}</h1>
+
+{% if beer.icon %}
+<img src="{{ beer.icon }}" />
+{% endif %}
+
+<dl>
+  {% if brewery.name %}
+  <dt><strong>Brewed By</strong></dt>
+  <dd>{{ brewery.name }}</dd>
+  {% endif %}
+  {% if style.style %}
+  <dt><strong>Style</strong></dt>
+  <dd>{{ style.style }}</dd>
+  {% endif %}
+  {% if abv.abv %}
+  <dt><strong>ABV</strong></dt>
+  <dd>{{ abv.abv }}</dd>
+  {% endif %}
+  {% if ibu.ibu %}
+  <dt><strong>IBU</strong></dt>
+  <dd>{{ ibu.ibu }}</dd>
+  {% endif %}
+</dl>
+
+{% endblock %}
