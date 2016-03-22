@@ -1,0 +1,136 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<h1>Recommendations</h1>
+
+<h3>People</h3>
+
+<p>You like the same breweries:</p>
+
+<ul style="list-style: none;">
+{% for user, job, city, count in users_by_breweries %}
+  <li>
+    <div>
+      <div style="float: left; padding: 5px; "><img src="{{ url_for('avatar', username=user.username) }}" height="32" /></div>
+      <div>
+        <a href="{{ url_for('profile', username=user.username) }}"><strong>{{ user.name }}</strong></a>, {{ city.name }}
+      </div>
+      <div><em>{{ job.title }}</em></div>
+      <div><br /></div>
+    </div>
+  </li>
+{% endfor %}
+</ul>
+
+<hr>
+
+You like the same beer:
+
+<ul style="list-style: none;">
+{% for user, job, city, count in users_by_beer %}
+  <li>
+    <div>
+      <div style="float: left; padding: 5px; "><img src="{{ url_for('avatar', username=user.username) }}" height="32" /></div>
+      <div>
+        <a href="{{ url_for('profile', username=user.username) }}"><strong>{{ user.name }}</strong></a>, {{ city.name }}
+      </div>
+      <div><em>{{ job.title }}</em></div>
+      <div><em>{{ count }} beers in common.</em></div>
+      <div><br /></div>
+    </div>
+  </li>
+{% endfor %}
+</ul>
+
+
+<h3>Breweries</h3>
+
+Which produce the beer you like most:
+
+<ul style="list-style: none;">
+{% for brewery, count in breweries_by_beer %}
+  <li>
+
+    <div>
+      <strong><a href="{{ url_for('beers_for_brewery', brewery_db_id=brewery.brewery.breweryDbId) }}">{{ brewery.name }}</a></strong> ({{count}} beers from this brewery.)
+    </div>
+  </li>
+{% endfor %}
+</ul>
+
+<hr>
+
+Which breweries your friends like most:
+
+<ul style="list-style: none;">
+{% for brewery, count in breweries_by_friends_likes %}
+  <li>
+
+    <div>
+      <strong><a href="{{ url_for('beers_for_brewery', brewery_db_id=brewery.brewery.breweryDbId) }}">{{ brewery.name }}</a></strong> ({{count}} beers from this brewery.)
+    </div>
+  </li>
+{% endfor %}
+</ul>
+
+<h3>Beer</h3>
+
+Beer my friends like:
+
+<table>
+  <tr>
+    <th></th>
+    <th>Name</th>
+    <th>Description</th>
+  </tr>
+{% for beer in beers_by_friends_likes %}
+  <tr>
+    <td>
+    {% if beer.beer.icon %}
+      <img src="{{ beer.beer.icon }}" height="48" />
+    {% else %}
+      <img src="{{ url_for('static', filename='default_beer.jpg') }}" height="48" />
+    {% endif %}
+    </td>
+    <td>
+      <strong><a href="{{ url_for('beer_details', brewery_db_id=beer.beer.breweryDbId) }}">{{ beer.beer.name }}</a></strong>
+    </td>
+    <td>
+      <p>{{ beer.beer.description }}</p>
+    </td>
+  </tr>
+{% endfor %}
+</table>
+
+
+Beer my friends like, who like the same breweries I like:
+
+<table>
+  <tr>
+    <th></th>
+    <th>Name</th>
+    <th>Description</th>
+  </tr>
+{% for beer in beers_by_friends_and_breweries_likes %}
+  <tr>
+    <td>
+    {% if beer.beer.icon %}
+      <img src="{{ beer.beer.icon }}" height="48" />
+    {% else %}
+      <img src="{{ url_for('static', filename='default_beer.jpg') }}" height="48" />
+    {% endif %}
+    </td>
+    <td>
+      <strong><a href="{{ url_for('beer_details', brewery_db_id=beer.beer.breweryDbId) }}">{{ beer.beer.name }}</a></strong>
+    </td>
+    <td>
+      <p>{{ beer.beer.description }}</p>
+    </td>
+  </tr>
+{% endfor %}
+</table>
+
+
+
+
+{% endblock %}

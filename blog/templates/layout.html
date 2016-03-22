@@ -19,8 +19,8 @@
     <li><a href="{{ url_for('breweries') }}">Breweries</a></li>
   {% if session.username %}
     <li><a href="{{ url_for('friends', username=session.username) }}">Friends</a></li>
+    <li><a href="{{ url_for('recommendations', username=session.username) }}">Recommendations</a></li>
   {% endif %}
-    <li>Recommendations</li>
   </ul>
 </div>
 <div class="content">

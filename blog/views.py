@@ -1,4 +1,5 @@
-from .models import User, get_todays_recent_reviews, all_styles, all_breweries, beers_by_brewery_for_brewery_db_id, beer_for_brewery_db_id
+from .models import *
+#User, get_todays_recent_reviews, all_styles, all_breweries, beers_by_brewery_for_brewery_db_id, beer_for_brewery_db_id, recommendations_users_by_breweries, recommendations_users_by_beer
 from flask import Flask, request, session, redirect, url_for, render_template, flash, make_response
 from avatar_generator import Avatar
 
@@ -100,6 +101,27 @@ def friends(username):
         'friends.html',
         username=username,
         friends=friends,
+    )
+
+@app.route('/recommendations/<username>')
+def recommendations(username):
+    users_by_breweries=recommendations_users_by_breweries(username)
+    users_by_beer=recommendations_users_by_beer(username)
+    breweries_by_beer=recommendations_breweries_by_beer(username)
+    breweries_by_friends_likes=recommendations_breweries_by_friends_likes(username)
+    beers_by_friends_likes=recommendations_beers_by_friends_likes(username)
+    beers_by_friends_and_breweries_likes=recommendations_beers_by_friends_and_breweries_likes(username)
+
+    print(breweries_by_beer)
+    
+    return render_template(
+        'recommendations.html',
+        users_by_breweries=users_by_breweries,
+        users_by_beer=users_by_beer,
+        breweries_by_beer=breweries_by_beer,
+        breweries_by_friends_likes=breweries_by_friends_likes,
+        beers_by_friends_likes=beers_by_friends_likes,
+        beers_by_friends_and_breweries_likes=beers_by_friends_and_breweries_likes,
     )
 
 @app.route('/styles')

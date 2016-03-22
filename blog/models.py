@@ -41,6 +41,72 @@ def beer_for_brewery_db_id(brewery_db_id):
     """
     return graph.cypher.execute(query, brewery_db_id=brewery_db_id)
 
+
+def recommendations_users_by_breweries(username):
+    query = """
+        MATCH (user:User {username: {username}})-[:LIKES]->(brewery:Brewery)<-[:LIKES]-(person:User)
+        OPTIONAL MATCH (person)-[:HAS_JOB_TITLE]->(job:Job)
+        OPTIONAL MATCH (person)-[:IS_FROM]->(city:City)
+        WHERE NOT (user)-[:FOLLOWS]->(person)
+        RETURN person, job, city, count(user) AS counts
+        ORDER BY counts DESC
+        LIMIT 10
+        """
+    return graph.cypher.execute(query, username=username)
+
+def recommendations_users_by_beer(username):
+    query = """
+        MATCH (user:User {username: {username}})-[:LIKES]->(beer:Beer)<-[:LIKES]-(person:User)
+        OPTIONAL MATCH (person)-[:HAS_JOB_TITLE]->(job:Job)
+        OPTIONAL MATCH (person)-[:IS_FROM]->(city:City)
+        WHERE NOT (user)-[:FOLLOWS]->(person)
+        RETURN person, job, city, count(user) AS counts
+        ORDER BY counts DESC
+        LIMIT 10
+        """
+    return graph.cypher.execute(query, username=username)
+
+def recommendations_breweries_by_beer(username):
+    query = """
+        MATCH (me:User {username: {username}})-[:LIKES]->(beer:Beer)-[:PRODUCED_BY]-(brewery:Brewery)
+        RETURN brewery, count(*) AS counts
+        ORDER BY counts DESC
+        LIMIT 10
+    """
+    return graph.cypher.execute(query, username=username)
+
+def recommendations_breweries_by_friends_likes(username):
+    query = """
+    MATCH (me:User {username: {username}})-[:FOLLOWS]->(person:User)-[:LIKES]->(brewery:Brewery)
+    WHERE NOT (me)-[:LIKES]->(brewery)
+    RETURN brewery, count(brewery) AS counts
+    ORDER BY counts DESC
+    LIMIT 10
+    """
+    return graph.cypher.execute(query, username=username)
+
+def recommendations_beers_by_friends_likes(username):
+    query = """
+    MATCH (me:User {username: {username}})-[:FOLLOWS]->(person:User)-[:LIKES]->(beer:Beer)
+    WHERE NOT (me)-[:LIKES]->(beer)
+    RETURN beer, count(beer) AS counts
+    ORDER BY counts DESC
+    LIMIT 10
+    """
+    return graph.cypher.execute(query, username=username)
+
+def recommendations_beers_by_friends_and_breweries_likes(username):
+    query = """
+    MATCH (me:User {username: {username}})-[:FOLLOWS]->(person:User)-[:LIKES]->(brewery:Brewery)<-[:PRODUCED_BY]-(beer:Beer)
+    WHERE NOT (me)-[:LIKES]->(beer)
+    RETURN beer, count(beer) AS counts
+    ORDER BY counts DESC
+    LIMIT 10
+    """
+    return graph.cypher.execute(query, username=username)
+
+
+
 class User:
     def __init__(self, username):
         self.username = username
