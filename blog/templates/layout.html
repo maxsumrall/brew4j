@@ -1,6 +1,18 @@
 <!doctype html>
 <title>ABeerFor.Me</title>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+<div class="sidebar">
+  <img src="{{ url_for('static', filename='logo.png') }}" />
+  <ul>
+    <li><a href="{{ url_for('styles') }}">Styles</a></li>
+    <li>Strengths</li>
+    <li>Breweries</li>
+    {% if session.username %}
+    <li><a href="{{ url_for('friends', username=session.username) }}">Friends</a></li>
+    {% endif %}
+    <li>Recommendations</li>
+  </ul>
+</div>
 <div class="page">
   <h1>My Blogging Site</h1>
   <div class="metanav">

@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<ul style="list-style: none;">
+{% for friend, job, city in friends %}
+  <li>
+    <div>
+      <div style="float: left; padding: 5px; "><img src="{{ url_for('avatar', username=friend.username) }}" height="32" /></div>
+      <div><strong>{{ friend.name }}</strong>, {{ city.name }}</div>
+      <div><em>{{ job.title }}</em></div>
+      <div><br /></div>
+    </div>
+  </li>
+{% endfor %}
+</ul>
+
+{% endblock %}

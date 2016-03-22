@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<ul style="list-style: none;">
+{% for style in styles %}
+  <li>{{ style.style.style }}</li>
+{% endfor %}
+</ul>
+
+{% endblock %}

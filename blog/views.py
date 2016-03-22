@@ -1,5 +1,6 @@
-from .models import User, get_todays_recent_reviews
-from flask import Flask, request, session, redirect, url_for, render_template, flash
+from .models import User, get_todays_recent_reviews, all_styles
+from flask import Flask, request, session, redirect, url_for, render_template, flash, make_response
+from avatar_generator import Avatar
 
 app = Flask(__name__)
 
@@ -82,6 +83,33 @@ def like_beer(beer_id):
 
     flash('Liked beer.')
     return redirect(request.referrer)
+
+@app.route("/avatar/<username>")
+def avatar(username):
+    avatar = Avatar.generate(128, username)
+    headers = { 'Content-Type': 'image/png' }
+    return make_response(avatar, 200, headers)
+
+@app.route('/friends/<username>')
+def friends(username):
+    logged_in_username = session.get('username')
+    user_being_viewed = User(username)
+    friends = user_being_viewed.get_friends()
+
+    return render_template(
+        'friends.html',
+        username=username,
+        friends=friends,
+    )
+
+@app.route('/styles')
+def styles():
+    styles = all_styles()
+
+    return render_template(
+        'styles.html',
+        styles=styles,
+    )
 
 
 @app.route('/profile/<username>')

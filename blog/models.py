@@ -6,6 +6,13 @@ import uuid
 
 graph = Graph()
 
+def all_styles():
+    query = """
+    MATCH (style:Style)
+    RETURN style
+    """
+    return graph.cypher.execute(query)
+
 
 class User:
     def __init__(self, username):
@@ -61,6 +68,16 @@ class User:
         WHERE user.username = {username}
         RETURN review, beer
         ORDER BY review.timestamp DESC LIMIT 5
+        """
+
+        return graph.cypher.execute(query, username=self.username)
+
+    def get_friends(self):
+        query = """
+        MATCH (user:User)-[:FOLLOWS]->(person:User)-[:HAS_JOB_TITLE]->(job:Job)
+        MATCH (person:User)-[:IS_FROM]->(city:City)
+        WHERE user.username = {username}
+        RETURN person, job, city
         """
 
         return graph.cypher.execute(query, username=self.username)
